@@ -253,9 +253,15 @@ extension_services:
             region: '{{{REGION}}}'
             logGroup: '{{{CLOUDWATCH_LOG_GROUP}}}'
             logStream: '{{{CLOUDWATCH_LOG_STREAM}}}'
-post_onboard_enabled: [
-  - name: example_inline_command
+post_onboard_enabled:
+  - name: install_ilx_workspace
     type: inline
     commands:
-      - touch /tmp/post_onboard_script.testing.sh
-]
+      - touch /tmp/TEST_FOR_POST_ONBOARD
+      - tmsh create ilx workspace inFlightTokenization_${deploymentName}
+      - tmsh create ilx workspace inFlightTokenization_${deploymentName} extension InFlightTokenization
+      - tmsh create ilx plugin TokenEx_${deploymentName} from-workspace inFlightTokenization_${deploymentName} extensions { InFlightTokenization { command-options replace-all-with { --debug } concurrency-mode single log-publisher remote-high-speed-log } } log-publisher remote-high-speed-log
+      - tmsh create ilx workspace inFlightTokenization_${deploymentName} rule inFlightTokenization
+      - npm install --prefix /var/ilx/workspaces/Common/inFlightTokenization_${deploymentName}/extensions/InFlightTokenization/ syslog-client
+      - tmsh modify ilx plugin TokenEx_${deploymentName} from-workspace inFlightTokenization_${deploymentName}
+      - tmsh modify ltm virtual ${deploymentName}_vs rules { TokenEx_${deploymentName}/inFlightTokenization }
