@@ -14,6 +14,12 @@ runtime_parameters:
       environment: aws
       field: hostname
       type: compute
+  - name: DEPLOYMENT_NAME
+    type: metadata
+    metadataProvider:
+      environment: aws
+      field: hostname
+      type: compute
   - name: REGION
     type: metadata
     metadataProvider:
@@ -258,10 +264,10 @@ post_onboard_enabled:
     type: inline
     commands:
       - touch /tmp/TEST_FOR_POST_ONBOARD
-      - tmsh create ilx workspace inFlightTokenization_${deploymentName}
-      - tmsh create ilx workspace inFlightTokenization_${deploymentName} extension InFlightTokenization
-      - tmsh create ilx plugin TokenEx_${deploymentName} from-workspace inFlightTokenization_${deploymentName} extensions { InFlightTokenization { command-options replace-all-with { --debug } concurrency-mode single log-publisher remote-high-speed-log } } log-publisher remote-high-speed-log
-      - tmsh create ilx workspace inFlightTokenization_${deploymentName} rule inFlightTokenization
-      - npm install --prefix /var/ilx/workspaces/Common/inFlightTokenization_${deploymentName}/extensions/InFlightTokenization/ syslog-client
-      - tmsh modify ilx plugin TokenEx_${deploymentName} from-workspace inFlightTokenization_${deploymentName}
-      - tmsh modify ltm virtual ${deploymentName}_vs rules { TokenEx_${deploymentName}/inFlightTokenization }
+      - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}}
+      - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}} extension InFlightTokenization
+      - tmsh create ilx plugin TokenEx_{{{DEPLOYMENT_NAME}}} from-workspace inFlightTokenization_${deploymentName} extensions { InFlightTokenization { command-options replace-all-with { --debug } concurrency-mode single log-publisher remote-high-speed-log } } log-publisher remote-high-speed-log
+      - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}} rule inFlightTokenization
+      - npm install --prefix /var/ilx/workspaces/Common/inFlightTokenization_{{{DEPLOYMENT_NAME}}}/extensions/InFlightTokenization/ syslog-client
+      - tmsh modify ilx plugin TokenEx_{{{DEPLOYMENT_NAME}}} from-workspace inFlightTokenization_${deploymentName}
+      - tmsh modify ltm virtual {{{DEPLOYMENT_NAME}}}_vs rules { TokenEx_${deploymentName}/inFlightTokenization }
