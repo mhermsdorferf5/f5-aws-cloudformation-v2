@@ -20,8 +20,20 @@
     "ParameterValue": "1"
   },
   {
+    "ParameterKey": "s3BucketName",
+    "ParameterValue": "hermsdorfer-catchall"
+  },
+  {
+    "ParameterKey": "s3BucketRegion",
+    "ParameterValue": "us-east-2"
+  },
+  {
     "ParameterKey": "artifactLocation",
-    "ParameterValue": "f5-aws-cloudformation-v2/v3.0.0.0/examples/"
+    "ParameterValue": "f5-aws-cloudformation-v2/examples/"
+  },
+  {
+    "ParameterKey": "bigIpRuntimeInitConfig",
+    "ParameterValue": "https://raw.githubusercontent.com/mhermsdorferf5/f5-aws-cloudformation-v2/main/examples/autoscale/bigip-configurations/runtime-init-conf-payg-with-app.yaml"
   },
   {
     "ParameterKey": "bastionScalingMaxSize",
@@ -58,10 +70,6 @@
   {
     "ParameterKey": "bigIpPauseTime",
     "ParameterValue": "480"
-  },
-  {
-    "ParameterKey": "bigIpRuntimeInitConfig",
-    "ParameterValue": "https://f5-cft-v2.s3.amazonaws.com/f5-aws-cloudformation-v2/v3.0.0.0/examples/autoscale/bigip-configurations/runtime-init-conf-payg-with-app.yaml"
   },
   {
     "ParameterKey": "bigIpRuntimeInitPackageUrl",
@@ -133,7 +141,7 @@
   },
   {
     "ParameterKey": "notificationEmail",
-    "ParameterValue": ""
+    "ParameterValue": "markh@f5.com"
   },
   {
     "ParameterKey": "numAzs",
@@ -145,7 +153,7 @@
   },
   {
     "ParameterKey": "owner",
-    "ParameterValue": "f5owner"
+    "ParameterValue": "markh@f5.com"
   },
   {
     "ParameterKey": "provisionExternalBigipLoadBalancer",
@@ -161,19 +169,11 @@
   },
   {
     "ParameterKey": "restrictedSrcAddressMgmt",
-    "ParameterValue": ""
+    "ParameterValue": "70.225.23.155/32"
   },
   {
     "ParameterKey": "restrictedSrcAddressApp",
-    "ParameterValue": ""
-  },
-  {
-    "ParameterKey": "s3BucketName",
-    "ParameterValue": "f5-cft-v2"
-  },
-  {
-    "ParameterKey": "s3BucketRegion",
-    "ParameterValue": "us-east-1"
+    "ParameterValue": "0.0.0.0/0"
   },
   {
     "ParameterKey": "snsEvents",
@@ -181,7 +181,7 @@
   },
   {
     "ParameterKey": "sshKey",
-    "ParameterValue": ""
+    "ParameterValue": "hermsdorfer-key-pair"
   },
   {
     "ParameterKey": "subnetMask",
@@ -189,7 +189,7 @@
   },
   {
     "ParameterKey": "uniqueString",
-    "ParameterValue": "myuniqstr"
+    "ParameterValue": "myCustomWAF"
   },
   {
     "ParameterKey": "vpcCidr",
