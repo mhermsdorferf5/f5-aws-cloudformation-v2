@@ -14,16 +14,14 @@ runtime_parameters:
       environment: aws
       type: SecretsManager
       version: AWSCURRENT
-      field: pkcs12
-      secretId: arn:aws:secretsmanager:us-east-2:538858987451:secret:prod/hermapp/cert-thygGb
+      secretId: prod/hermapp/pkcs12_cert
   - name: PKCS12_PASSPHRASE
     type: secret
     secretProvider:
       environment: aws
       type: SecretsManager
       version: AWSCURRENT
-      field: passphrase
-      secretId: arn:aws:secretsmanager:us-east-2:538858987451:secret:prod/hermapp/cert-thygGb
+      secretId: prod/hermapp/pkcs12_passphrase
   - name: DEPLOYMENT_NAME
     type: tag
     tagProvider:
@@ -57,12 +55,6 @@ runtime_parameters:
     tagProvider:
       environment: aws
       key: metricNamespace
-bigip_ready_enabled:
-  - name: using_runtime_variables
-    type: inline
-    commands:
-      - echo "{{{ PKCS12_FILE }}}""
-      - echo "{{{ PKCS12_PASSPHRASE }}}""
 extension_packages:
   install_operations:
     - extensionType: do
@@ -220,6 +212,10 @@ extension_services:
                 ignoreChanges: true
               pkcs12:
                 base64: '{{{PKCS12_FILE}}}'
+            client_ssl:
+              class: TLS_Server
+              certificates: 
+                - certificate: pkcs12_cert
             serviceMain:
               class: Service_HTTPS
               virtualAddresses:
@@ -232,8 +228,7 @@ extension_services:
               pool: /Tenant_1/Shared/shared_pool
               securityLogProfiles:
                 - use: /Tenant_1/Shared/telemetry_asm_security_log_profile
-              serverTLS:
-                use: pkcs12_cert
+              serverTLS: client_ssl
               redirect80: false
     - extensionType: ts
       type: inline
@@ -293,6 +288,7 @@ post_onboard_enabled:
   - name: install_ilx_workspace
     type: inline
     commands:
+      - tmsh create ltm virtual hermtest_vs destination 1.1.1.1:1111
       - tmsh create sys log-config publisher remote-high-speed-log
       - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}}
       - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}} extension InFlightTokenization
