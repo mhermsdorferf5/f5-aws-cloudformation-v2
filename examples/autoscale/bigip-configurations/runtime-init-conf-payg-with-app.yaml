@@ -15,7 +15,7 @@ runtime_parameters:
       type: SecretsManager
       version: AWSCURRENT
       field: pkcs12
-      secretId: prod/hermapp/cert
+      secretId: arn:aws:secretsmanager:us-east-2:538858987451:secret:prod/hermapp/cert-thygGb
   - name: PKCS12_PASSPHRASE
     type: secret
     secretProvider:
@@ -23,7 +23,7 @@ runtime_parameters:
       type: SecretsManager
       version: AWSCURRENT
       field: passphrase
-      secretId: prod/hermapp/cert
+      secretId: arn:aws:secretsmanager:us-east-2:538858987451:secret:prod/hermapp/cert-thygGb
   - name: DEPLOYMENT_NAME
     type: tag
     tagProvider:
