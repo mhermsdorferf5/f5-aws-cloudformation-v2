@@ -57,7 +57,12 @@ runtime_parameters:
     tagProvider:
       environment: aws
       key: metricNamespace
-bigip_ready_enabled: []
+bigip_ready_enabled:
+  - name: using_runtime_variables
+    type: inline
+    commands:
+      - echo "{{{ PKCS12_FILE }}}""
+      - echo "{{{ PKCS12_PASSPHRASE }}}""
 extension_packages:
   install_operations:
     - extensionType: do
@@ -206,6 +211,15 @@ extension_services:
           HTTPS_Service:
             class: Application
             template: https
+            pkcs12_cert:
+              class: Certificate
+              remark: echo -en TestSecretPhassphrase | base64 && base64 <pkcs12.file>
+              passphrase:
+                ciphertext: '{{{PKCS12_PASSPHRASE}}}'
+                protected: eyJhbGciOiJkaXIiLCJlbmMiOiJub26lIn0
+                ignoreChanges: true
+              pkcs12:
+                base64: '{{{PKCS12_FILE}}}'
             serviceMain:
               class: Service_HTTPS
               virtualAddresses:
@@ -221,15 +235,6 @@ extension_services:
               serverTLS:
                 use: pkcs12_cert
               redirect80: false
-            pkcs12_crt:
-              class: Certificate
-              remark: echo -en TestSecretPhassphrase | base64 && base64 <pkcs12.file>
-              passphrase:
-                ciphertext: {{{PKCS12_PASSPHRASE}}}
-                protected: eyJhbGciOiJkaXIiLCJlbmMiOiJub26lIn0
-                ignoreChanges: true
-              pkcs12:
-                base64: {{{PKCS12_FILE}}}
     - extensionType: ts
       type: inline
       value:
@@ -295,4 +300,4 @@ post_onboard_enabled:
       - tmsh create ilx workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}} rule inFlightTokenization
       - npm install --prefix /var/ilx/workspaces/Common/inFlightTokenization_{{{DEPLOYMENT_NAME}}}/extensions/InFlightTokenization/ syslog-client
       - tmsh modify ilx plugin TokenEx_{{{DEPLOYMENT_NAME}}} from-workspace inFlightTokenization_{{{DEPLOYMENT_NAME}}}
-      - tmsh modify ltm virtual {{{DEPLOYMENT_NAME}}}_vs rules { TokenEx_${deploymentName}/inFlightTokenization }
+      - tmsh modify ltm virtual {{{DEPLOYMENT_NAME}}}_vs rules { TokenEx_{{{DEPLOYMENT_NAME}}}/inFlightTokenization }
