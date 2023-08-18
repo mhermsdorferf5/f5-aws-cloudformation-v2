@@ -125,7 +125,7 @@
   },
   {
     "ParameterKey": "environment",
-    "ParameterValue": "f5env"
+    "ParameterValue": "hermtest"
   },
   {
     "ParameterKey": "group",
@@ -189,7 +189,7 @@
   },
   {
     "ParameterKey": "uniqueString",
-    "ParameterValue": "myCustomWAF"
+    "ParameterValue": "hermtest"
   },
   {
     "ParameterKey": "vpcCidr",
