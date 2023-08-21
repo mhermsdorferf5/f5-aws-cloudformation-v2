@@ -7,6 +7,10 @@
 *.log
 # ignore local pem
 pem*
+*.crt
+*.csr
+*.key
+*.pfx
 # ignore env files
 env.sh
 # ignore local test scripts

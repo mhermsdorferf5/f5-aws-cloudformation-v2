@@ -5,6 +5,44 @@
 
 ## F5 BIG-IP AWS CloudFormation 2.0
 
+## TLDR:
+
+### Prep AWS Environment
+
+```bash
+export REGION=us-west-2
+aws ec2 import-key-pair \
+  --region ${REGION} \
+  --key-name hermsdorfer-key-pair \
+  --public-key-material fileb:///home/mhermsdorfer/.ssh/id_rsa.pub
+```
+
+### Encode & Create Secrets with pkcs12 file & phassphrase
+
+```bash
+export pkcs12Passphrase=`echo -en "TestSecretPhassphrase"| base64`
+export pkcs12File=`base64 -w0 testCert.pfx`
+aws secretsmanager create-secret \
+    --name prod/hermapp/pkcs12_cert \
+    --region ${REGION} \
+    --description "pkcs12 file, base64 encoded & stored as aws secret." \
+    --secret-string "${pkcs12File}"
+aws secretsmanager create-secret \
+    --name prod/hermapp/pkcs12_passphrase \
+    --region ${REGION} \
+    --description "pkcs12 passphrase, base64 encoded & stored as aws secret." \
+    --secret-string "${pkcs12Passphrase}"
+```
+
+### Deploy CloudFormation Template:
+
+```bash
+aws cloudformation create-stack --region ${REGION} --stack-name hermTestStack \
+  --template-body "`cat ./examples/autoscale/payg/autoscale.yaml`" \
+  --parameters "`cat ./examples/autoscale/payg/autoscale-parameters.json`" \
+  --capabilities CAPABILITY_NAMED_IAM
+```
+
 
 ## Introduction
 
